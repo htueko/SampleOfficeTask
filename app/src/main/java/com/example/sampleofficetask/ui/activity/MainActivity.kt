@@ -1,5 +1,6 @@
 package com.example.sampleofficetask.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu
@@ -14,7 +15,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        // send to register activity (to register)
+        txt_sign_up_main.setOnClickListener {
+            startActivity(Intent(this@MainActivity, RegisterActivity::class.java))
+        }
 
     }
 
