@@ -3,12 +3,12 @@ package com.example.sampleofficetask.ui.activity
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.text.TextUtilsCompat
 import com.example.sampleofficetask.R
 import com.example.sampleofficetask.util.Constants
 import com.example.sampleofficetask.util.showSnackBar
@@ -20,8 +20,6 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDialog: ProgressDialog
     private lateinit var parentLayout: ConstraintLayout
-    private var email = ""
-    private var password = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,42 +43,54 @@ class RegisterActivity : AppCompatActivity() {
             startActivity(Intent(this@RegisterActivity, MainActivity::class.java))
         }
 
-        // get the user input
-        email = edt_email_register.text.toString().trim()
-        password = edt_password_register.text.toString().trim()
-
-        // validate the user input
-        if (TextUtils.isEmpty(email)) textInputLayout_email_register.error =
-            "Please enter valid email address" else return
-        when {
-            TextUtils.isEmpty(password) -> {
-                textInputLayout_password_register.error = "Please enter valid password"
-                return
-            }
-            password.length <= 7 -> textInputLayout_password_register.hint = "password should be equal or longer than 8 character"
-            else -> return
-        }
-
-        // event handler for register button
         btn_register_register.setOnClickListener {
-            // show the progress
-            mDialog.setMessage("Processing...")
-            mDialog.show()
-            // create a new user
-            mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        // task successful
-                        showSnackBar(parentLayout, "Account creation successfully")
-                        startActivity(Intent(this@RegisterActivity, DashboardActivity::class.java))
-                    } else {
-                        // task isn't successful
-                        mDialog.dismiss()
-                        showSnackBar(parentLayout, "Account creation is not finished :(")
-                    }
+            // get the user input
+            val email = edt_email_register.text.toString().trim()
+            val password = edt_password_register.text.toString().trim()
+            // validate the user
+            Toast.makeText(this, "email: $email and password: $password", Toast.LENGTH_LONG).show()
+            if (!TextUtils.isEmpty(email)){
+                // email is valid
+                if (password.isNotEmpty() && password.isNotBlank() && password.length >= 8){
+                    // password is valid
+                    // create new user
+                    createUser(email, password)
+                }else{
+                    textInputLayout_password_register.error = "Please provide valid password"
                 }
+            }else{
+                textInputLayout_email_register.error = "Please provide valid email address"
+            }
         }
 
     }
 
+    private fun createUser(email: String, password: String) {
+        // login the user
+        mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    // sign in successfully
+                    Log.d(Constants.ACTIVITY_REGISTER, "Log in user with $email and $password")
+                    mDialog.dismiss()
+                    showSnackBar(parentLayout, "Login in successfully")
+                    startActivity(Intent(this@RegisterActivity, DashboardActivity::class.java))
+                } else {
+                    // sign in error
+                    Log.d(Constants.ACTIVITY_REGISTER, "Error while login in, ${it.exception?.localizedMessage}")
+                    mDialog.dismiss()
+                    showSnackBar(parentLayout, "${it.exception?.localizedMessage}")
+                }
+            }
+
+    }
+
 }
+
+
+
+
+
+
+
+

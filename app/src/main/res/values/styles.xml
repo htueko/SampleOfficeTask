@@ -7,16 +7,20 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <!--Custom TextInput Style-->
-    <style name="InputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+    <style name="InputStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_margin">4dp</item>
+        <item name="android:cacheColorHint">@color/colorText</item>
         <item name="boxCornerRadiusBottomEnd">25dp</item>
         <item name="boxCornerRadiusTopStart">25dp</item>
         <item name="boxCornerRadiusBottomStart">25dp</item>
@@ -26,6 +30,8 @@
     <!--Custom Button Style-->
     <style name="ButtonStyle" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:layout_margin">4dp</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">@color/colorText</item>
         <item name="cornerRadius">25dp</item>
     </style>
 
