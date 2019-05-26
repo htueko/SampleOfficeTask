@@ -1,7 +1,7 @@
 package com.example.sampleofficetask.util
 
 class Constants {
-    companion object{
+    companion object {
         const val SHARE_PREF = "shared_preferences"
         const val FIRST_TIME = "first_time"
         const val ACTIVITY_REGISTER = "RegisterActivity"

@@ -6,9 +6,9 @@
 
     <gradient
         android:angle="90"
-        android:type="linear"
         android:centerColor="@color/colorButtonCenter"
         android:endColor="@color/colorButtonEnd"
-        android:startColor="@color/colorButtonStart" />
+        android:startColor="@color/colorButtonStart"
+        android:type="linear" />
 
 </shape>

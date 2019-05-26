@@ -49,16 +49,16 @@ class RegisterActivity : AppCompatActivity() {
             val password = edt_password_register.text.toString().trim()
             // validate the user
             Toast.makeText(this, "email: $email and password: $password", Toast.LENGTH_LONG).show()
-            if (!TextUtils.isEmpty(email)){
+            if (!TextUtils.isEmpty(email)) {
                 // email is valid
-                if (password.isNotEmpty() && password.isNotBlank() && password.length >= 8){
+                if (password.isNotEmpty() && password.isNotBlank() && password.length >= 8) {
                     // password is valid
                     // create new user
                     createUser(email, password)
-                }else{
+                } else {
                     textInputLayout_password_register.error = "Please provide valid password"
                 }
-            }else{
+            } else {
                 textInputLayout_email_register.error = "Please provide valid email address"
             }
         }

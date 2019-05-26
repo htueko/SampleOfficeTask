@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         // check the user is already signed up or not
         // if so sent to DashBoard Activity
-        if (mAuth.currentUser != null){
+        if (mAuth.currentUser != null) {
             showSnackBar(parentLayout, "Welcome back ${mAuth?.currentUser?.displayName}")
             startActivity(Intent(this@MainActivity, DashboardActivity::class.java))
         }
@@ -46,16 +46,16 @@ class MainActivity : AppCompatActivity() {
             val email = edt_email_main.text.toString().trim()
             val password = edt_password_main.text.toString().trim()
             // validate the user input
-            if (!TextUtils.isEmpty(email)){
+            if (!TextUtils.isEmpty(email)) {
                 // email is valid
-               if (password.isNotEmpty() && password.isNotBlank() && password.length >= 8){
-                   // password is valid
-                   // sign in user
-                   userSignIn(email, password)
-               }else {
-                   textInputLayout_password_main.error = "Please provide valid password"
-               }
-            }else{
+                if (password.isNotEmpty() && password.isNotBlank() && password.length >= 8) {
+                    // password is valid
+                    // sign in user
+                    userSignIn(email, password)
+                } else {
+                    textInputLayout_password_main.error = "Please provide valid password"
+                }
+            } else {
                 textInputLayout_email_main.error = "Please provide valid email address"
             }
 
