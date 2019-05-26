@@ -5,4 +5,7 @@ data class Data(
     var title: String,
     var note: String,
     var date: String
-)
+){
+    // no argument constructor
+    constructor() : this("", "", "", "")
+}

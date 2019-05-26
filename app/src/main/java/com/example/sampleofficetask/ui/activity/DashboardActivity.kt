@@ -8,7 +8,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.sampleofficetask.R
 import com.example.sampleofficetask.adapter.ListViewHolder
 import com.example.sampleofficetask.model.Data
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -21,26 +20,29 @@ import kotlinx.android.synthetic.main.input_form.view.*
 import java.text.DateFormat
 import java.util.*
 
+
 class DashboardActivity : AppCompatActivity() {
 
     // fields
-    private lateinit var mDatabaseReference: DatabaseReference
+    private lateinit var mDatabase: FirebaseDatabase
+    private lateinit var mReference: DatabaseReference
     private lateinit var mAuth: FirebaseAuth
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dashboard)
+        setContentView(com.example.sampleofficetask.R.layout.activity_dashboard)
 
         // init
         mAuth = FirebaseAuth.getInstance()
+        mDatabase = FirebaseDatabase.getInstance()
         val mUser = mAuth.currentUser
         val uId = mUser!!.uid
-        mDatabaseReference = FirebaseDatabase.getInstance().reference.child("NoteTask").child(uId)
-        mDatabaseReference.keepSynced(true)
+        mReference = mDatabase.reference.child("NoteTask").child(uId)
+        mReference.keepSynced(true)
 
         // recycler view
-        recyclerView = findViewById(R.id.recycler_dashboard)
+        recyclerView = findViewById(com.example.sampleofficetask.R.id.recycler_dashboard)
         val layoutManager = LinearLayoutManager(this)
         layoutManager.reverseLayout = true
         layoutManager.stackFromEnd = true
@@ -53,7 +55,7 @@ class DashboardActivity : AppCompatActivity() {
             // alert dialog with custom layout
             val myDialog = AlertDialog.Builder(this@DashboardActivity)
             val inflater = LayoutInflater.from(this)
-            val view = inflater.inflate(R.layout.input_form, null)
+            val view = inflater.inflate(com.example.sampleofficetask.R.layout.input_form, null)
             myDialog.setView(view)
             val dialog = myDialog.create()
             dialog.show()
@@ -69,12 +71,12 @@ class DashboardActivity : AppCompatActivity() {
                     if (!TextUtils.isEmpty(note)) {
                         // title and note is not empty
                         // id and date
-                        val id = mDatabaseReference.push().key
+                        val id = mReference.push().key
                         val date = DateFormat.getDateInstance().format(Date())
                         // model class
                         val data = Data(id!!, title, note, date)
                         // push to realtime database with unique key and date
-                        mDatabaseReference.child(id).setValue(data)
+                        mReference.child(id).setValue(data)
                         // dismiss the dialog
                         dialog.dismiss()
 
@@ -89,7 +91,8 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        val query = FirebaseDatabase.getInstance().reference.child(mAuth.currentUser!!.uid)
+        super.onStart()
+        val query = mDatabase.reference.child("NoteTask")
         val options = FirebaseRecyclerOptions.Builder<Data>()
             .setLifecycleOwner(this@DashboardActivity)
             .setQuery(query, Data::class.java)
@@ -98,7 +101,7 @@ class DashboardActivity : AppCompatActivity() {
         val adapter = object : FirebaseRecyclerAdapter<Data, ListViewHolder>(options) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
                 val inflater = LayoutInflater.from(this@DashboardActivity)
-                val view = inflater.inflate(R.layout.note_item, parent, false)
+                val view = inflater.inflate(com.example.sampleofficetask.R.layout.note_item, parent, false)
                 return ListViewHolder(view)
             }
 
@@ -110,6 +113,7 @@ class DashboardActivity : AppCompatActivity() {
 
         }
         recyclerView.adapter = adapter
-        super.onStart()
+
     }
+
 }
