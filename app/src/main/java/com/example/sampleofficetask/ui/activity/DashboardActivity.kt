@@ -1,9 +1,12 @@
 package com.example.sampleofficetask.ui.activity
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +38,7 @@ class DashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
+        setSupportActionBar(toolbar_dashboard)
 
         // init
         mAuth = FirebaseAuth.getInstance()
@@ -99,7 +103,8 @@ class DashboardActivity : AppCompatActivity() {
         // query
         val query = mDatabase.reference.child("NoteTask").child(user)
         // options
-        val options = FirebaseRecyclerOptions.Builder<Data>().setLifecycleOwner(this).setQuery(query, Data::class.java).build()
+        val options =
+            FirebaseRecyclerOptions.Builder<Data>().setLifecycleOwner(this).setQuery(query, Data::class.java).build()
         // adapter
         val adapter = object : FirebaseRecyclerAdapter<Data, ListViewHolder>(options) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
@@ -118,6 +123,20 @@ class DashboardActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
+    // inflate the main menu
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.action_log_out -> {
+                mAuth.signOut()
+                startActivity(Intent(this@DashboardActivity, MainActivity::class.java))
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 }
