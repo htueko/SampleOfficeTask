@@ -11,4 +11,5 @@
     <color name="colorButtonStart">#97fff0</color>
     <color name="colorButtonCenter">#d4f0f9</color>
     <color name="colorButtonEnd">#70bffb</color>
+    <color name="colorTextBlack">#000000</color>
 </resources>

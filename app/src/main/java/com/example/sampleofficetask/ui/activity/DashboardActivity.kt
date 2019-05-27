@@ -1,5 +1,6 @@
 package com.example.sampleofficetask.ui.activity
 
+
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sampleofficetask.R
 import com.example.sampleofficetask.adapter.ListViewHolder
 import com.example.sampleofficetask.model.Data
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -29,9 +31,10 @@ class DashboardActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var recyclerView: RecyclerView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.example.sampleofficetask.R.layout.activity_dashboard)
+        setContentView(R.layout.activity_dashboard)
 
         // init
         mAuth = FirebaseAuth.getInstance()
@@ -42,20 +45,19 @@ class DashboardActivity : AppCompatActivity() {
         mReference.keepSynced(true)
 
         // recycler view
-        recyclerView = findViewById(com.example.sampleofficetask.R.id.recycler_dashboard)
+        recyclerView = findViewById(R.id.recycler_dashboard)
         val layoutManager = LinearLayoutManager(this)
         layoutManager.reverseLayout = true
         layoutManager.stackFromEnd = true
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = layoutManager
 
-
         // passed custom layout to alert dialog
         fab_dashboard.setOnClickListener {
             // alert dialog with custom layout
             val myDialog = AlertDialog.Builder(this@DashboardActivity)
             val inflater = LayoutInflater.from(this)
-            val view = inflater.inflate(com.example.sampleofficetask.R.layout.input_form, null)
+            val view = inflater.inflate(R.layout.input_form, null, false)
             myDialog.setView(view)
             val dialog = myDialog.create()
             dialog.show()
@@ -92,28 +94,30 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val query = mDatabase.reference.child("NoteTask")
-        val options = FirebaseRecyclerOptions.Builder<Data>()
-            .setLifecycleOwner(this@DashboardActivity)
-            .setQuery(query, Data::class.java)
-            .build()
-        // retrieve available note list at onStart()
+        // firebase adapter
+        val user = FirebaseAuth.getInstance().currentUser!!.uid
+        // query
+        val query = mDatabase.reference.child("NoteTask").child(user)
+        // options
+        val options = FirebaseRecyclerOptions.Builder<Data>().setLifecycleOwner(this).setQuery(query, Data::class.java).build()
+        // adapter
         val adapter = object : FirebaseRecyclerAdapter<Data, ListViewHolder>(options) {
             override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
-                val inflater = LayoutInflater.from(this@DashboardActivity)
-                val view = inflater.inflate(com.example.sampleofficetask.R.layout.note_item, parent, false)
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.note_item, parent, false)
                 return ListViewHolder(view)
             }
 
             override fun onBindViewHolder(holder: ListViewHolder, position: Int, data: Data) {
-                holder.setDate(data.date)
-                holder.setTitle(data.title)
-                holder.setNote(data.note)
+                holder.title.text = data.title
+                holder.note.text = data.note
+                holder.date.text = data.date
             }
-
         }
+        adapter.notifyDataSetChanged()
+        adapter.startListening()
         recyclerView.adapter = adapter
-
     }
+
+
 
 }

@@ -6,7 +6,7 @@
     android:layout_margin="8dp"
     android:elevation="4dp"
     android:padding="8dp"
-    app:cardBackgroundColor="@color/colorPrimaryDark"
+    app:strokeColor="@color/colorStart"
     app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +20,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:text="May 26 2019"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorTextBlack"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,7 +32,7 @@
             android:layout_marginTop="8dp"
             android:text="title text here"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorTextBlack"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_date_note_item" />
 
@@ -45,7 +45,7 @@
             android:layout_marginBottom="8dp"
             android:text="note text here"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="@color/colorText"
+            android:textColor="@color/colorTextBlack"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txt_title_note_item" />
