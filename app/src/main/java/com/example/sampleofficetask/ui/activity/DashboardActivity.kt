@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import kotlinx.android.synthetic.main.input_form.view.*
+import kotlinx.android.synthetic.main.update_form.view.*
 import java.text.DateFormat
 import java.util.*
 
@@ -60,6 +61,7 @@ class DashboardActivity : AppCompatActivity() {
         fab_dashboard.setOnClickListener {
             // alert dialog with custom layout
             val myDialog = AlertDialog.Builder(this@DashboardActivity)
+            myDialog.setTitle("Note Task")
             val inflater = LayoutInflater.from(this)
             val view = inflater.inflate(R.layout.input_form, null, false)
             myDialog.setView(view)
@@ -116,6 +118,14 @@ class DashboardActivity : AppCompatActivity() {
                 holder.title.text = data.title
                 holder.note.text = data.note
                 holder.date.text = data.date
+                // event listener
+                holder.itemView.setOnClickListener {
+                    // get the key for the post
+                    val key: String = getRef(position).key.toString()
+                    val title = data.title
+                    val note = data.note
+                    updateNote(title, note, key)
+                }
             }
         }
         adapter.notifyDataSetChanged()
@@ -123,12 +133,15 @@ class DashboardActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
     }
 
+
+
     // inflate the main menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
+    // handle the menu click events
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.action_log_out -> {
@@ -137,6 +150,42 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // function to update the note
+    private fun updateNote(title: String, note: String, key: String?){
+        val myDialog = AlertDialog.Builder(this@DashboardActivity)
+        myDialog.setTitle("Update the task")
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.update_form, null, false)
+        myDialog.setView(view)
+        val dialog = myDialog.create()
+
+        val edtTitle = view.edt_title_update_form
+        val edtNote = view.edt_note_update_form
+        edtTitle.setText(title)
+        // place the cursor at the end
+        edtTitle.setSelection(title.length)
+        edtNote.setText(note)
+        // place the cursor at the end
+        edtNote.setSelection(note.length)
+
+        val date = DateFormat.getInstance().format(Date())
+
+        view.btn_update_update_form.setOnClickListener {
+            // when update button pressed
+            val data = Data(key!!, title, note, date)
+            mReference.child(key).setValue(data)
+            dialog.dismiss()
+        }
+
+        view.btn_delete_update_form.setOnClickListener {
+            // when delete button pressed
+            mReference.child(key!!).removeValue()
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
 }
